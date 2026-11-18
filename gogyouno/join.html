@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>「五行の！」で対戦しよう！</title>
+<meta name="description" content="部屋コードを受け取ったら、タップして「五行の！」の通信対戦に参加しよう。">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="五行の！">
+<meta property="og:title" content="「五行の！」で対戦しよう！">
+<meta property="og:description" content="部屋コードを受け取ったら、タップして参加しよう。五行色体表で覚える札あそび。">
+<meta property="og:image" content="https://goma99-creator.github.io/goma-koyomi/gogyouno/ogp.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="apple-itunes-app" content="app-id=6834835831">
+<style>
+  :root { --navy:#1b2c3a; --navy2:#263e50; --gold:#e9c878; --cream:#fbf3e2; --sub:#e9dfc6; --fire:#c04a2b; }
+  * { box-sizing:border-box; }
+  body { margin:0; min-height:100vh; font-family:"Hiragino Mincho ProN","Yu Mincho",serif; color:var(--cream);
+    background:radial-gradient(circle at 30% 20%, var(--navy2), var(--navy) 70%); display:flex; align-items:center; justify-content:center; padding:24px 16px; }
+  main { width:100%; max-width:420px; text-align:center; border:2px solid var(--gold); border-radius:24px; padding:28px 20px 24px;
+    background:rgba(20,32,42,.6); box-shadow:0 20px 50px rgba(0,0,0,.45); }
+  img.hero { width:100%; border-radius:14px; display:block; }
+  h1 { font-size:26px; margin:20px 0 4px; color:var(--gold); letter-spacing:2px; }
+  p.lead { margin:0 0 18px; font-size:14px; color:var(--sub); }
+  .code-box { border:1.5px solid var(--gold); border-radius:16px; padding:10px 8px 14px; background:#fffaf0; color:#2a2418; }
+  .code-label { font-size:12px; font-weight:700; letter-spacing:3px; color:#7a6f57; }
+  .code { font-size:52px; font-weight:800; letter-spacing:14px; padding-left:14px; color:var(--fire); line-height:1.15; }
+  .btn { display:block; width:100%; margin-top:12px; padding:14px; border-radius:14px; font:inherit; font-size:17px; font-weight:800; letter-spacing:2px;
+    text-decoration:none; cursor:pointer; border:2px solid var(--gold); }
+  .primary { background:linear-gradient(135deg,#c04a2b,#e0662f); color:#fff6e0; }
+  .ghost { background:transparent; color:var(--cream); }
+  .note { font-size:12px; color:var(--sub); line-height:1.7; margin-top:16px; text-align:left; }
+  .err { color:#ffb4a0; font-size:14px; margin:14px 0; }
+</style>
+</head>
+<body>
+<main>
+  <img class="hero" src="ogp.png" alt="五行の！">
+  <h1>対戦しよう！</h1>
+  <p class="lead">五行色体表で覚える札あそび</p>
+  <div id="ok" hidden>
+    <div class="code-box">
+      <div class="code-label">部屋コード</div>
+      <div class="code" id="code"></div>
+    </div>
+    <a class="btn primary" id="open" href="#">アプリで参加する</a>
+    <button class="btn ghost" id="copy" type="button">コードをコピー</button>
+    <a class="btn ghost" href="https://apps.apple.com/jp/app/id6834835831">App Store で入手</a>
+    <div class="note">
+      アプリが入っていれば「アプリで参加する」で開き、コードが入った状態になります。なまえを入れて「参加する」を押してください。<br>
+      開かないときは、コードをコピーしてアプリの「通信対戦」に貼り付けてください。
+    </div>
+  </div>
+  <p class="err" id="bad" hidden>部屋コードが見つかりませんでした。送ってくれた人にコードを確認してください。</p>
+</main>
+<script>
+(function () {
+  var c = (new URLSearchParams(location.search).get("c") || "").toUpperCase();
+  if (!/^[A-Z2-9]{4}$/.test(c)) { document.getElementById("bad").hidden = false; return; }
+  document.getElementById("ok").hidden = false;
+  document.getElementById("code").textContent = c;
+  document.getElementById("open").href = "gogyouno://join?c=" + c;
+  var b = document.getElementById("copy");
+  b.onclick = function () {
+    var done = function () { b.textContent = "コピーしました"; setTimeout(function () { b.textContent = "コードをコピー"; }, 1600); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(c).then(done, fallback); else fallback();
+    function fallback() { var t = document.createElement("textarea"); t.value = c; document.body.appendChild(t); t.select(); try { document.execCommand("copy"); done(); } catch (e) {} t.remove(); }
+  };
+})();
+</script>
+</body>
+</html>
